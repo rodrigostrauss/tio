@@ -14,5 +14,5 @@ LINK_LIBRARIES (tio pthread)
 #LINK_LIBRARIES (tio tcmalloc) # google's tcmalloc
 #LINK_LIBRARIES (tio profiler) # google's cpu profiler
 
-ADD_EXECUTABLE(tio Command.cpp DataStoreManager.cpp TioTcpServer.cpp TioTcpSession.cpp pch.cpp tio.cpp)
+ADD_EXECUTABLE(tio Command.cpp ContainerManager.cpp TioTcpServer.cpp TioTcpSession.cpp pch.cpp tio.cpp)
 

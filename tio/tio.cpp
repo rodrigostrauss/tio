@@ -95,7 +95,7 @@ void RunServer(const string& dataPath, unsigned short port,
 	using namespace boost::asio::ip;
 
 #ifndef _WIN32
-	ProfilerStart("/tmp/tio.prof");
+	//ProfilerStart("/tmp/tio.prof");
 #endif
 
 	asio::io_service io_service;
@@ -135,7 +135,7 @@ void RunServer(const string& dataPath, unsigned short port,
 	io_service.run();
 
 #ifndef _WIN32
-	ProfilerStop();
+	//ProfilerStop();
 #endif
 }
 
