@@ -114,7 +114,7 @@ namespace logdb
 
 		bool Open(const char* name)
 		{
-			_file = open(name, O_DIRECT | O_RDWR);
+			_file = open(name, O_RDWR);
 			return _file != -1;
 		}
 
@@ -126,8 +126,13 @@ namespace logdb
 		DWORD Write(void* buffer, DWORD size)
 		{
 			DWORD ret = write(_file, buffer, size);
-            fdatasync(_file);
-            return ret;
+		#ifdef __APPLE__
+			// MACOSX doesn't support fdatasync
+			fsync(_file);
+		#else
+			fdatasync(_file);
+		#endif
+			return ret;
 		}
 
 		void SetPointer(DWORD offset)

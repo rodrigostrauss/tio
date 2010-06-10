@@ -251,7 +251,7 @@ def main():
             if elapsed != 0:
                 per_sec = log_each / elapsed
             else:
-                persec = 123456789.546456
+                per_sec = 123456789.546456
 
             sys.stderr.write('%d records, %0.2f/s %s\n' % (index + 1, per_sec, '(skipped)' if index < skip_until else ''))
 

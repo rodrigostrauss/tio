@@ -222,7 +222,7 @@ namespace tio {
 
 				if(accessType_ == RecordNumber)
 				{
-					ConverterHelper converter(NULL, value, metadata);
+					ConverterHelper converter(TIONULL, value, metadata);
 
 					ldb_.SetByIndex(tableInfo_, key.AsInt(), NULL, converter.GetLdbValue(), converter.GetLdbMetadata());
 				}
@@ -255,7 +255,7 @@ namespace tio {
 				{
 					size_t recordNumber = key.AsInt();
 
-					ConverterHelper converter(NULL, value, metadata);
+					ConverterHelper converter(TIONULL, value, metadata);
 
 					DWORD index = ldb_.InsertByIndex(tableInfo_, recordNumber, NULL, converter.GetLdbValue(), converter.GetLdbMetadata());
 
@@ -301,7 +301,7 @@ namespace tio {
 				{
 					BOOST_ASSERT(accessType_ == Map);
 
-					ConverterHelper helper(key, NULL, NULL);
+					ConverterHelper helper(key, TIONULL, TIONULL);
 
 					DWORD recno = ldb_.Delete(tableInfo_, 0, *helper.GetLdbKey());
 
@@ -309,7 +309,7 @@ namespace tio {
 						throw std::invalid_argument("invalid index");
 				}
 
-				dispatcher_.RaiseEvent("delete", key, NULL, NULL);
+				dispatcher_.RaiseEvent("delete", key, TIONULL, TIONULL);
 			}
 
 			virtual void Clear()
@@ -357,7 +357,7 @@ namespace tio {
 				{
 					BOOST_ASSERT(accessType_ == Map);
 
-					helper.FromTioData(searchKey, NULL, NULL);
+					helper.FromTioData(searchKey, TIONULL, TIONULL);
 
 					DWORD recordIndex = logdb::LDB_INVALID_RECNO;
 
