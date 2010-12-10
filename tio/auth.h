@@ -16,7 +16,12 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 */
 #pragma once
 
-using namespace std;
+namespace tio
+{
+	using std::string;
+	using std::vector;
+	using std::set;
+	using std::map;
 
 class Auth : public boost::noncopyable
 {
@@ -176,3 +181,5 @@ public:
 		return CheckCommandAccess(cmd, tokens);		
 	}
 };
+
+}

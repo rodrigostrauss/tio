@@ -26,12 +26,17 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 
 namespace tio
 {
-	using namespace std;
+	
 	using boost::shared_ptr;
 	using boost::system::error_code;
 	namespace asio = boost::asio;
 	using namespace boost::asio::ip;
 
+	using std::string;
+	using std::vector;
+	using std::map;
+	using std::deque;
+	
 	std::string Serialize(const std::list<const TioData*>& fields);
 	
 	class TioTcpServer

@@ -26,7 +26,7 @@ namespace tio
 { 
 namespace MemoryStorage
 {
-	using namespace std;
+	
 	using boost::shared_ptr;
 	using boost::lexical_cast;
 

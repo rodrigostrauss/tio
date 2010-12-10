@@ -21,7 +21,7 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 
 namespace tio
 {
-	using namespace std;
+	
 	using std::cout;
 	using boost::shared_ptr;
 	using boost::system::error_code;
@@ -33,6 +33,11 @@ namespace tio
 	using boost::is_any_of;
 
 	using boost::tuple;
+
+	using std::make_pair;
+	using std::string;
+	using std::stringstream;
+	using std::istream;
 
 	namespace asio = boost::asio;
 	using namespace boost::asio::ip;
@@ -134,7 +139,7 @@ namespace tio
 	void TioTcpSession::OnAccept()
 	{
 		#ifdef _DEBUG
-		cout << "<< new connection" << endl;
+		std::cout << "<< new connection" << std::endl;
 		#endif
 		ReadCommand();
 	}

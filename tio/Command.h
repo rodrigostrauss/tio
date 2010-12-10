@@ -20,7 +20,11 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 
 namespace tio
 {
-	using namespace std;
+
+	using std::vector;
+	using std::string;
+	using std::ostream;
+	using std::pair;
 	using boost::shared_ptr;
 
 	class Command

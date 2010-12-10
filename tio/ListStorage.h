@@ -21,6 +21,11 @@ namespace tio {
 namespace MemoryStorage
 {
 
+	using std::string;
+	using std::vector;
+	using std::map;
+	using std::list;
+
 
 typedef list<ValueAndMetadata> ListType;
 

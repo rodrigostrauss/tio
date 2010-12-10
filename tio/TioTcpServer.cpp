@@ -19,7 +19,7 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 
 namespace tio
 {
-	using namespace std;
+	
 	using boost::shared_ptr;
 	using boost::system::error_code;
 
@@ -77,7 +77,7 @@ namespace tio
 			return; // something is VERY wrong...
 
 #ifdef _DEBUG
-		cout << "disconnect" << endl;
+		std::cout << "disconnect" << std::endl;
 #endif
 		metaContainers_.sessions->Delete(lexical_cast<string>(client->GetID()), TIONULL, TIONULL);
 		sessions_.erase(i);

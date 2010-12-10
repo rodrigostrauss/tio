@@ -21,10 +21,14 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 #include "MemoryStorage.h"
 //#include "BdbStorage.h"
 #include "LogDbStorage.h"
+#include "TioPython.h"
 
 
 using namespace tio;
+
 using boost::shared_ptr;
+using std::cout;
+using std::endl;
 
 void LoadStorageTypes(ContainerManager* containerManager, const string& dataPath)
 {
@@ -45,7 +49,7 @@ void LoadStorageTypes(ContainerManager* containerManager, const string& dataPath
 
 void TestEventSink(const string& eventName, const TioData* key, const TioData* value, const TioData* metadata)
 {
-	std::cout << eventName << "(" << key << ", " << value << ", " << metadata << ")" << endl;
+	cout << eventName << "(" << key << ", " << value << ", " << metadata << ")" << endl;
 }
 
 /*
@@ -103,9 +107,24 @@ int StressTest()
 }
 */
 
-void RunServer(const string& dataPath, unsigned short port, 
-			   const vector< pair<string, string> >& users,
-			   const vector< pair<string, string> >& aliases)
+
+void SetupContainerManager(
+	tio::ContainerManager* manager, 
+	const string& dataPath,
+	const vector< pair<string, string> >& aliases)
+{
+	LoadStorageTypes(manager, dataPath);
+
+	pair<string, string> p;
+	BOOST_FOREACH(p, aliases)
+	{
+		manager->AddAlias(p.first, p.second);
+	}
+}
+
+void RunServer(tio::ContainerManager* manager,
+			   unsigned short port, 
+			   const vector< pair<string, string> >& users)
 {
 	namespace asio = boost::asio;
 	using namespace boost::asio::ip;
@@ -118,16 +137,7 @@ void RunServer(const string& dataPath, unsigned short port,
 #endif
 
 	asio::io_service io_service;
-	tio::ContainerManager containerManager;
 	tcp::endpoint e(tcp::v4(), port);
-
-	LoadStorageTypes(&containerManager, dataPath);
-
-	pair<string, string> p;
-	BOOST_FOREACH(p, aliases)
-	{
-		containerManager.AddAlias(p.first, p.second);
-	}
 
 	//
 	// default aliases
@@ -135,7 +145,7 @@ void RunServer(const string& dataPath, unsigned short port,
 	
 	if(users.size())
 	{
-		shared_ptr<ITioContainer> usersContainer = containerManager.CreateContainer("volatile_map", "__users__");
+		shared_ptr<ITioContainer> usersContainer = manager->CreateContainer("volatile_map", "__users__");
 
 		pair<string, string> p;
 		BOOST_FOREACH(p, users)
@@ -144,7 +154,7 @@ void RunServer(const string& dataPath, unsigned short port,
 		}
 	}
 
-	tio::TioTcpServer tioServer(containerManager, io_service, e);
+	tio::TioTcpServer tioServer(*manager, io_service, e);
 
 	unsigned int elapsed = t.Elapsed();
 
@@ -159,10 +169,8 @@ void RunServer(const string& dataPath, unsigned short port,
 #endif
 }
 
-
 int main(int argc, char* argv[])
 {
-	using namespace std;
 	namespace po = boost::program_options;
 
 	cout << "Tio, The Information Overlord. Copyright Rodrigo Strauss (www.1bit.com.br)" << endl;
@@ -174,6 +182,7 @@ int main(int argc, char* argv[])
 		desc.add_options()
 			("alias", po::value< vector<string> >(), "set an alias for a container type, using syntax alias:container_type")
 			("user", po::value< vector<string> >(), "add user, using syntax user:password")
+			("python-plugin", po::value< vector<string> >(), "load and run a python plugin")
 			("port", po::value<unsigned short>(), "listening port")
 			("data-path", po::value<string>(), "sets data path");
 
@@ -222,14 +231,24 @@ int main(int argc, char* argv[])
 				users.push_back(make_pair(user.substr(0, sep), user.substr(sep+1)));
 			}
 		}
+
+		{
+			cout << "Starting Tio Infrastructure... " << endl;
+			tio::ContainerManager containerManager;
+			
+			SetupContainerManager(&containerManager, vm["data-path"].as<string>(), aliases);
+
+			cout << "Starting Python support... " << endl;
+			InitializePythonSupport(argv[0], &containerManager);
+
+			cout << "Loading Python plugins... " << endl;
+			LoadPythonPlugins(vm["python-plugin"].as< vector<string> >());
 		
-		cout << "Starting Tio Server... ";
-		
-		RunServer(
-			vm["data-path"].as<string>(),
-			vm["port"].as<unsigned short>(),
-			users,
-			aliases);
+			RunServer(
+				&containerManager,
+				vm["port"].as<unsigned short>(),
+				users);
+		}
 	}
 	catch(std::exception& ex)
 	{

@@ -23,7 +23,12 @@ namespace tio
 {
 	using std::numeric_limits;
 	using std::runtime_error;
+	using std::map;
+	using std::string;
+	using std::vector;
+	using std::pair;
 	using boost::function;
+	using boost::shared_ptr;
 
 
 	template<typename T1, typename T2>
@@ -91,7 +96,7 @@ namespace tio
 
 namespace tio
 {
-	using namespace std;
+	
 	using boost::shared_ptr;
 
 	class TioData

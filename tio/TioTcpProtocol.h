@@ -19,6 +19,8 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 
 namespace tio
 {
+	using std::string;
+	using std::stringstream;
 	using boost::lexical_cast;
 	using boost::bad_lexical_cast;
 	

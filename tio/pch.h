@@ -30,6 +30,8 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 #pragma warning(disable : 4127) // conditional expression is constant
 #pragma warning(disable : 4512) // assignment operator could not be generated
 #pragma warning(disable : 4100) // unreferenced local parameter
+#pragma warning(disable : 4121) //: 'boost::python::detail::aligned_storage<size>' : alignment of a member was sensitive to packing
+
 
 //
 // lexical_cast is triggering this warning every time, it's pissing me off
@@ -64,6 +66,7 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 #include <boost/ptr_container/ptr_set.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/filesystem.hpp>
 
 #include <boost/program_options.hpp>
 
@@ -73,6 +76,9 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 
 #include <boost/typeof/std/utility.hpp>
 #include <boost/typeof/std/vector.hpp>
+
+//#define BOOST_DEBUG_PYTHON
+#include <boost/python.hpp>
 
 #include <iostream>
 #include <iomanip>
@@ -88,6 +94,7 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 #if defined(max) 
 #undef max
 #endif
+
 //
 // berkeley db
 //
@@ -116,3 +123,7 @@ bool key_found(T& container, V& value)
 {
 	return container.find(value) != container.end();
 }
+
+#ifndef min
+template<typename T1, typename T2> inline T1 min (T1 l, T2 r) { return l < r ? l : r; }
+#endif

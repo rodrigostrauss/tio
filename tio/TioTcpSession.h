@@ -22,10 +22,11 @@ Copyright 2010 Rodrigo Strauss (http://www.1bit.com.br)
 
 namespace tio
 {
-	using namespace std;
+	
 	using boost::shared_ptr;
 	using boost::weak_ptr;
 	using boost::system::error_code;
+	using std::stringstream;
 
 	namespace asio = boost::asio;
 	using namespace boost::asio::ip;
