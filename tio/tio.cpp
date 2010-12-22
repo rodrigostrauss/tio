@@ -238,11 +238,14 @@ int main(int argc, char* argv[])
 			
 			SetupContainerManager(&containerManager, vm["data-path"].as<string>(), aliases);
 
-			cout << "Starting Python support... " << endl;
-			InitializePythonSupport(argv[0], &containerManager);
+			if(vm.count("python-plugin"))
+			{
+				cout << "Starting Python support... " << endl;
+				InitializePythonSupport(argv[0], &containerManager);
 
-			cout << "Loading Python plugins... " << endl;
-			LoadPythonPlugins(vm["python-plugin"].as< vector<string> >());
+				cout << "Loading Python plugins... " << endl;
+				LoadPythonPlugins(vm["python-plugin"].as< vector<string> >());
+			}
 		
 			RunServer(
 				&containerManager,

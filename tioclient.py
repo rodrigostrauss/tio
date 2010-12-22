@@ -73,18 +73,14 @@ def encode(values):
     header_io.write(' ')
     header_io.write(values_io.getvalue())
 
-    return header_io.getvalue()    
+    return header_io.getvalue()
 
-class RemoteContainer(object):
-    def __init__(self, manager, handle, type, name):
-        self.manager = manager
-        self.handle = handle
-        self.type = type
-        self.name = name
-        
-    def __repr__(self):
-        return '<tioclient.RemoteContainer name="%s", type="%s">' % (self.name, self.type)
+#
+# this class is meant to be inherited by container classes,
+# just to make than more pythonic
+#
 
+class ContainerPythonizer(object):
     def __del__(self):
         self.Close()
 
@@ -107,6 +103,49 @@ class RemoteContainer(object):
             value, metadata = valueOrValueAndMetadata, None
             
         return self.set(key, value, metadata)
+
+    def append(self, value, metadata=None):
+        return self.push_back(value, metadata)
+
+    def extend(self, iterable):
+        for x in iterable:
+            self.push_back(x)
+            
+    def values(self):
+        return self.query()    
+
+    def keys(self):
+        return [x[0] for x in self.query_with_key_and_metadata()]
+
+    def __fluffler():
+        container.__dict__['__del__'] = __del__
+        container.__dict__['__getitem__'] = __getitem__
+        container.__dict__['__delitem__'] = __delitem__
+        container.__dict__['__len__'] = __len__
+        container.__dict__['__setitem__'] = __setitem__
+        container.__dict__['append'] = append
+        container.__dict__['extend'] = extend
+        container.__dict__['values'] = values
+        container.__dict__['keys'] = keys
+
+
+class PluginContainer(ContainerPythonizer):
+    def __init__(self, container):
+        self.container = container
+
+    def push_back(self, key, value, metadata):
+        self.container.push_back(key, value, metadata)
+
+
+class RemoteContainer(ContainerPythonizer):
+    def __init__(self, manager, handle, type, name):
+        self.manager = manager
+        self.handle = handle
+        self.type = type
+        self.name = name
+        
+    def __repr__(self):
+        return '<tioclient.RemoteContainer name="%s", type="%s">' % (self.name, self.type)
         
     def get_property(self, key, withKeyAndMetadata=False):
         key, value, metadata = self.send_data_command('get_property', key, None, None)
@@ -114,10 +153,6 @@ class RemoteContainer(object):
         
     def set_property(self, key, value, metadata=None):
         return self.send_data_command('set_property', key, value, metadata)
-
-    def extend(self, iterable):
-        for x in iterable:
-            self.push_back(x)
 
     def get(self, key, withKeyAndMetadata=False):
         key, value, metadata = self.send_data_command('get', key, None, None)
@@ -132,10 +167,7 @@ class RemoteContainer(object):
 
     def pop_front(self, withKeyAndMetadata=False):
         key, value, metadata = self.send_data_command('pop_front', None, None, None)
-        return value if not withKeyAndMetadata else (key, value, metadata)    
-
-    def append(self, value, metadata=None):
-        return self.push_back(value, metadata)
+        return value if not withKeyAndMetadata else (key, value, metadata)        
 
     def insert(self, key, value, metadata=None):
         return self.send_data_command('insert', key, value, metadata)
@@ -178,12 +210,6 @@ class RemoteContainer(object):
 
     def start_recording(self, destination_container):
         return self.manager.SendCommand('start_recording', self.handle, destination_container.handle)
-
-    def values(self):
-        return self.query()
-
-    def keys(self):
-        return [x[0] for x in self.query_with_key_and_metadata()]
 
     def query(self, startOffset=None, endOffset=None):
         # will return only the values
@@ -641,7 +667,7 @@ def MasterSpeedTest():
         hasKey = test['hasKey']
         ds = man.CreateContainer(namePerfix + type, type)
         print type
-        result = SpeedTest(ds.Set if hasKey else ds.PushBack, count, bytes, hasKey)
+        result = SpeedTest(ds.set if hasKey else ds.push_back, count, bytes, hasKey)
 
         print '%s: %f msg/s' % (type, result)
 
