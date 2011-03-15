@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
 PROJECT(tio)
-SET(CMAKE_BUILD_TYPE Debug)
 
 #INCLUDE_DIRECTORIES(/usr/include/boost_1_34_1/)
 #LINK_DIRECTORIES(/usr/local/lib)
