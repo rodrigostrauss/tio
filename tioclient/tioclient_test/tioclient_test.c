@@ -254,7 +254,7 @@ int TEST_map(struct TIO_CONNECTION* connection)
 	for(a = 0 ; a < 50 ; a++)
 	{
 		buffer = tiodata_set_string_get_buffer(&key, 64);
-		itoa(a, buffer, 10);
+		sprintf(buffer,"%d", a);
 
 		tiodata_set_int(&value, a);
 		result = tio_container_set(test_container, &key, &value, NULL);
@@ -317,7 +317,7 @@ int TEST_map(struct TIO_CONNECTION* connection)
 	for(a = 0 ; a < 50 ; a++)
 	{
 		buffer = tiodata_set_string_get_buffer(&search_key, 64);
-		itoa(a, buffer, 10);
+		sprintf(buffer, "%d", a);
 
 		result = tio_container_get(test_container, &search_key, &key, &value, &metadata);
 		if(TIO_FAILED(result)) goto clean_up_and_return;
