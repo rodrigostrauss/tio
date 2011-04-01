@@ -83,6 +83,11 @@ struct TIO_CONNECTION
 	int dispatch_events_on_receive;
 };
 
+
+unsigned int stream_buffer_space_used(struct STREAM_BUFFER* stream_buffer);
+unsigned int stream_buffer_space_left(struct STREAM_BUFFER* stream_buffer);
+
+
 //
 // PR1 protocol
 //

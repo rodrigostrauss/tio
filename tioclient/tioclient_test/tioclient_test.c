@@ -62,6 +62,7 @@ void test_event_callback(void* cookie, unsigned int handle, unsigned int event_c
 	tiodata_convert_to_string(&v);
 	tiodata_convert_to_string(&m);
 	
+	/*
 	printf("cookie: %d, handle: %d, event_code: %s, key: %s, value: %s, metadata: %s\n", 
 		cookie, 
 		handle, 
@@ -69,6 +70,7 @@ void test_event_callback(void* cookie, unsigned int handle, unsigned int event_c
 		k.string_,
 		v.string_,
 		m.string_);
+		*/
 
 	tiodata_set_as_none(&k); tiodata_set_as_none(&v); tiodata_set_as_none(&m); 
 }
@@ -119,6 +121,7 @@ int TEST_list(struct TIO_CONNECTION* connection)
 	struct TIO_DATA search_key, key, value, metadata;
 	int a;
 	int result;
+	int TEST_COUNT = 50 * 1000;
 
 	tiodata_init(&search_key);
 	tiodata_init(&key);
@@ -137,7 +140,7 @@ int TEST_list(struct TIO_CONNECTION* connection)
 	result = tio_container_clear(test_container);
 	if(TIO_FAILED(result)) goto clean_up_and_return;
 
-	for(a = 0 ; a < 50 ; a++)
+	for(a = 0 ; a < TEST_COUNT ; a++)
 	{
 		tiodata_set_int(&value, a);
 		result = tio_container_push_back(test_container, NULL, &value, NULL);
@@ -196,7 +199,7 @@ int TEST_list(struct TIO_CONNECTION* connection)
 	if(TIO_FAILED(result))
 		goto clean_up_and_return;
 
-	for(a = 0 ; a < 50 ; a++)
+	for(a = 0 ; a < TEST_COUNT ; a++)
 	{
 		tiodata_set_int(&search_key, a);
 

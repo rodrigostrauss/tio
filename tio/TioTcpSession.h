@@ -409,26 +409,25 @@ inline bool Pr1MessageGetField(const PR1_MESSAGE* message, unsigned int fieldId,
 			if(CheckError(err))
 				return;
 
-			void* buffer;
-			unsigned int bufferSize;
+			pendingSendSize_ -= stream_buffer_space_used(message->stream_buffer);
 
-			pr1_message_get_buffer(message.get(), &buffer, &bufferSize);
+			if(pendingBinarySendData_.empty())
+				SendPendingSnapshots();
 
-			pendingSendSize_ -= bufferSize;
-
-			if(!pendingBinarySendData_.empty())
+			while(!pendingBinarySendData_.empty() &&
+					(pendingSendSize_ == 0 
+					|| pendingSendSize_ + stream_buffer_space_used(pendingBinarySendData_.front()->stream_buffer) <= 4096))
 			{
 				shared_ptr<PR1_MESSAGE> pendingMessage = pendingBinarySendData_.front();
 				pendingBinarySendData_.pop();
 				SendBinaryMessageNow(pendingMessage);
 			}
-			else
-				SendPendingSnapshots();
+				
 		}
 
 		void SendBinaryMessage(shared_ptr<PR1_MESSAGE> message)
 		{
-			if(pendingSendSize_ == 0)
+			if(pendingSendSize_ == 0 || stream_buffer_space_used(message->stream_buffer) + pendingSendSize_ <= 4096)
 				SendBinaryMessageNow(message);
 			else
 				pendingBinarySendData_.push(message);
