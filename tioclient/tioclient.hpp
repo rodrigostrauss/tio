@@ -280,7 +280,7 @@ namespace tio
 
 		bool operator==(const this_type& v)
 		{
-			return value_() == v.value();
+			return value() == v.value();
 		}
 	};
 
@@ -497,14 +497,16 @@ namespace tio
 		{
 		public:
 			typedef list<TValue, TMetadata> this_type;
+			typedef typename TioContainerImpl<size_t, TValue, TMetadata, list<TValue, TMetadata> >::value_type value_type;
+
 	
 		public:
 			void push_back(const value_type& value)
 			{
 				int result;
 
-				result = container_manager()->container_push_back(
-					container_, 
+				result = this->container_manager()->container_push_back(
+					this->container_, 
 					NULL,
 					TioDataConverter<TValue>(value).inptr(),
 					NULL);
@@ -516,8 +518,8 @@ namespace tio
 			{
 				int result;
 
-				result = container_manager()->container_push_front(
-					container_, 
+				result = this->container_manager()->container_push_front(
+					this->container_, 
 					NULL,
 					TioDataConverter<TValue>(value).inptr(),
 					NULL);
@@ -530,8 +532,8 @@ namespace tio
 				int result;
 				TioDataConverter<value_type> value;
 
-				result = container_manager()->container_pop_back(
-					container_, 
+				result = this->container_manager()->container_pop_back(
+					this->container_, 
 					NULL,
 					value.outptr(),
 					NULL);
@@ -546,8 +548,8 @@ namespace tio
 				int result;
 				TioDataConverter<value_type> value;
 
-				result = container_manager()->container_pop_front(
-					container_, 
+				result = this->container_manager()->container_pop_front(
+					this->container_, 
 					NULL,
 					value.outptr(),
 					NULL);
