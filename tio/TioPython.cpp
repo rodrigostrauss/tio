@@ -160,8 +160,8 @@ namespace tio
 					.def("get", &TioContainerWrapper::GetRecord, (arg("key")))
 					.def("delete", &TioContainerWrapper::Delete)
 					.def("clear", &TioContainerWrapper::Clear)
-					.def("set_property", &TioContainerWrapper::SetProperty)
-					.def("get_property", &TioContainerWrapper::GetProperty)
+					.def("propget", &TioContainerWrapper::SetProperty)
+					.def("propset", &TioContainerWrapper::GetProperty)
 					.def("subscribe", &TioContainerWrapper::Subscribe)
 					.def("subscribe", &TioContainerWrapper::Subscribe1)
 					.def("unsubscribe", &TioContainerWrapper::Unsubscribe)
@@ -173,6 +173,7 @@ namespace tio
 					.def("query_with_key_and_metadata", &TioContainerWrapper::Query0)
 
 					.def("__len__", &TioContainerWrapper::GetRecordCount)
+					.def("get_count", &TioContainerWrapper::GetRecordCount)
 					.def("__getitem__", &TioContainerWrapper::GetRecordValue)
 					.def("__setitem__", &TioContainerWrapper::Set2)
 					.def("__delitem__",  &TioContainerWrapper::Delete1)
